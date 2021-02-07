@@ -1,0 +1,27 @@
+project,date,zone,area_hct,trees_planted,families,schools,school_type,individuals,hives_given,honey_produced,honey_families,secondary_tree_density
+Reforestation,1/1/14,zone 1,150,67500,,,,,,,,
+Reforestation,1/1/15,zone 1,100,45000,,,,,,,,
+Reforestation,1/1/16,zone 1,200,90000,,,,,,,,
+Reforestation,1/1/17,zone 2,350,157500,,,,,,,,
+Reforestation,1/1/18,zone 2,300,135000,,,,,,,,
+Reforestation,1/1/19,zone 2,400,180000,,,,,,,,
+Reforestation,1/1/20,zone 2,600,270000,,,,,,,,
+Pygmy Land Project,1/1/10,Kahuzi Biega National Park,20,,46,,,,,,,
+Pygmy Land Project,1/1/12,Kahuzi Biega National Park,20,,46,,,,,,,
+Pygmy Land Project,1/1/10,Buyungule village,5,,75,,,,,,,
+Pygmy Land Project,1/1/12,Buyungule village,5,,75,,,,,,,
+Environmental Education,1/1/18,Kahuzi Biega National Park,,,,3,primary,10,,,,
+Environmental Education,1/1/18,Kahuzi Biega National Park,,,,2,secondary,16,,,,
+Environmental Education,1/1/19,Kahuzi Biega National Park,,,,3,primary,12,,,,
+Environmental Education,1/1/19,Kahuzi Biega National Park,,,,3,secondary,15,,,,
+Environmental Education,1/1/20,Kahuzi Biega National Park,,,,4,primary,11,,,,
+Environmental Education,1/1/20,Kahuzi Biega National Park,,,,6,secondary,19,,,,
+Batwa for Beekeeping,1/1/20,,,,,,,,22,18,6,
+Gorilla Habitat Connectivity,1/1/19,cf1,14564.4471,,,,,,,,,0.5
+Gorilla Habitat Connectivity,1/1/19,cf2,10653.8887,,,,,,,,,0.6
+Gorilla Habitat Connectivity,1/1/19,cf3,15586.1318,,,,,,,,,0.7
+Gorilla Habitat Connectivity,1/1/19,cf4,2303.3019,,,,,,,,,0.4
+Gorilla Habitat Connectivity,1/1/19,cf5,110017.5112,,,,,,,,,0.25
+Gorilla Habitat Connectivity,1/1/19,cf6,64236.8536,,,,,,,,,0.3
+Gorilla Habitat Connectivity,1/1/19,cf7,60140.9606,,,,,,,,,0.5
+Gorilla Habitat Connectivity,1/1/19,cf8,399.3775,,,,,,,,,0.8
