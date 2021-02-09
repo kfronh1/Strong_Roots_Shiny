@@ -30,7 +30,19 @@ ui <- fluidPage(theme = SR_theme,
                                        "Strong Roots Congo Project Website"),
 
 
-                           tabPanel("About"),
+                           tabPanel("About",
+                                    sidebarLayout(
+                                        sidebarPanel(),
+                                        mainPanel(
+                                            p("Strong Roots Congo is a grassroots conservation and sustinable development organization
+                                              operating in the eastern Democratic Republic on Congo. Srong Roots works with local and
+                                              international partners to conserve Great Apes and empower local and indigenous communities.
+
+                                               Vision: To see local communities, indigenous people, and wildlife thrive together in the eastern DRC.
+
+                                              Mission: To conserve Grauer's gorillas and other wildlife by enganing local and indigenous people in conservation
+                                              while improving well-being.")
+                                    ))),
 
                            tabPanel("Projects",
                                     sidebarLayout(
