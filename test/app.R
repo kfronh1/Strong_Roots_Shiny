@@ -17,7 +17,7 @@ projects_all <- read_csv("project_df.csv") %>%
 SR_theme <- bs_theme(
     bg = "white",
     fg = "green",
-    secondary = "forestgreen"
+    primary = "forestgreen"
 )
 
 
@@ -25,50 +25,26 @@ SR_theme <- bs_theme(
 ui <- fluidPage(theme = SR_theme,
 
                 navbarPage(title = div(id = "img-id",
-                                           img(src = "logo.png",
-                                               height = "100"),
-                                       "Strong Roots Congo Project Directory"),
+                                       img(src = "logo.png",
+                                           height = "100"),
+                                       "Strong Roots Congo Project Website"),
+
 
                            tabPanel("About",
-                                    headerPanel("Strong Roots Mission & Vision"),
-                                    h5("Strong Roots Congo empowers local communities by providing knowledge, tools and opportunities for a sustainable way of life while also supporting the long term preservation of endemic species.",
-                                       style = "margin: 5px 20px"),
-                                    br(),
-                                    splitLayout(cellWidths = c("50%", "50%"),
-                                                div(
-                                                    img(src = "gorilla1.jpg",
-                                                        width = "350",
-                                                        style = "vertical-align:middle;margin:5px 50px"),
-                                                    br(),
-                                                    br(),
-                                                    p("Strong Roots is working to create a corridor of community forests that connect the Kahuzi-Biega National Park and the Itombwe Nature Reserve. Once designated by the government as a community forest, the corridor would promote the long-term connectivity and protection of Grauer's gorilla populations in the region. The pilot project requires thecombinationof multiple smaller strategies ranging from community education to species mapping to climate modeling.",
-                                                      style = "margin: 20px 20px"),
-                                                    ),
-                                                div(h5("Vision:"),
-                                                    p("To see local communities, indigenous peoples, and wildlife thrive together in the Eastern Democratic Republic of the Congo."),
-                                                    br(),
-                                                    h5("Mission:"),
-                                                    p("To simultaneously conserve gorilla populations and support local communities through the empowerment and engagement of local indigenous peoples and communities in conservation practices."),
-                                                    br(),
-                                                    br(),
-                                                    img(src = "child.jpg",
-                                                        width = "350",
-                                                        style = "vertical-align:middle;margin:5px 50px"))
-                                    ),
-                                    br(),
-                                    br(),
-                                    h2("Contact Strong Roots"),
-                                    br(),
-                                    h4("Website"),
-                                    a("www.strongrootscongo.org",
-                                      href = "www.strongrootscongo.org"),
-                                    h4("Founder & Executive Director"),
-                                    p("Dominique Bikaba, bikaba@strongrootscongo.org"),
-                                    actionButton(inputId = "donate",
-                                                 label = "Donate to Stronng Roots",
-                                                 icon = NULL)
-                                    ),
+                                    sidebarLayout(
+                                        sidebarPanel(id = "img-id",
+                                                     img(src = "logo.png",
+                                                         height = "100")),
+                                        mainPanel(
+                                            p("Strong Roots Congo is a grassroots conservation and sustinable development organization
+                                              operating in the eastern Democratic Republic on Congo. Srong Roots works with local and
+                                              international partners to conserve Great Apes and empower local and indigenous communities.
 
+                                               Vision: To see local communities, indigenous people, and wildlife thrive together in the eastern DRC.
+
+                                              Mission: To conserve Grauer's gorillas and other wildlife by enganing local and indigenous people in conservation
+                                              while improving well-being.")
+                                        ))),
 
                            tabPanel("Projects",
                                     sidebarLayout(
@@ -137,7 +113,7 @@ server <- function(input, output) {
     impact_reactive <- reactive({
 
         projects_all  %>%
-           # filter(date %in% input$pick_date) %>%
+            # filter(date %in% input$pick_date) %>%
             filter(project %in% input$pick_project)
 
     })
