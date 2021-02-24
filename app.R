@@ -1,3 +1,4 @@
+library(raster)
 library(tidyverse)
 library(shiny)
 library(bslib)
@@ -5,6 +6,7 @@ library(shinythemes)
 library(leaflet)
 library(janitor)
 library(lubridate)
+library(here)
 
 corridor <- read_csv("Corridor.csv") %>%
     clean_names()
@@ -13,6 +15,8 @@ projects_all <- read_csv("project_df.csv") %>%
     clean_names() %>%
     mutate(date = lubridate::mdy(date))
 
+barriers <- here('barriers.tif')
+barrier_rast <- raster(barriers)
 
 SR_theme <- bs_theme(
     bg = "white",
