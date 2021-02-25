@@ -10,6 +10,8 @@ library(janitor)
 
 ### WRANGLING
 
+#work baby
+
 study_region_table <- read_csv("study_region.csv") %>%
     clean_names() %>%
     select(area_ha:assisting_org)
