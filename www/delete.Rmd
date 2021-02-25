@@ -1,0 +1,20 @@
+---
+title: "DELETE SOON"
+author: "Zoe Duerksen-Salm"
+date: "2/23/2021"
+output: html_document
+---
+
+## Project Initiative
+The team hopes to promote the conservation of the endangered Grauer's gorilla (*Gorilla beringei graueri*) in the Democratic Republic of the Congo (DRC). Using a data-driven approach to inform habitat corridor management, we looked at priority conservation areas to investigate the trade-offs between human activities and gorilla conservation planning.
+
+## Strong Roots Congo
+
+To promote gorilla conservation within the study region, the Primate Pathways team has partnered with Strong Roots Congo, a community-based organization in the DRC.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eOor2D1oMlc?start=2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Project Goals
+
+Strong Roots is working to create a corridor of community forests that connect the Kahuzi-Biega National Park and the Itombwe Nature Reserve. Our team has conducted land use and connectivity analyses to identify high-priority conservation areas and investigate the impacts of future management plans in light of climate change.
+

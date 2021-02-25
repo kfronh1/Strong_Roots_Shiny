@@ -1,155 +1,245 @@
-library(tidyverse)
-library(shiny)
-library(bslib)
-library(shinythemes)
 library(leaflet)
+library(shiny)
+library(shinydashboard)
+library(collapsibleTree)
+library(shinycssloaders)
+library(tigris)
+library(sf)
+library(tmap)
 library(janitor)
-library(lubridate)
 
-corridor <- read_csv("Corridor.csv") %>%
-    clean_names()
+### WRANGLING
 
-projects_all <- read_csv("project_df.csv") %>%
+study_region_table <- read_csv("study_region.csv") %>%
     clean_names() %>%
-    mutate(date = lubridate::mdy(date))
+    select(area_ha:assisting_org)
 
 
-SR_theme <- bs_theme(
-    bg = "white",
-    fg = "green",
-    secondary = "forestgreen"
-)
+### UI
+
+ui <- shinyUI(fluidPage(
+
+    # load custom stylesheet
+    includeCSS("www/style.css"),
+
+    # remove shiny "red" warning messages on GUI
+    tags$style(type="text/css",
+               ".shiny-output-error { visibility: hidden; }",
+               ".shiny-output-error:before { visibility: hidden; }"
+    ),
+
+    # load page layout
+    dashboardPage(
+
+        skin = "green",
+
+        dashboardHeader(title = span(img(src = "PP_logo.png", width = 150)),
+                        titleWidth = 250,
+
+                        dropdownMenu(
+                            type = "notifications",
+                            headerText = strong("Learn More"),
+                            icon = icon("share-alt"),
+                            badgeStatus = NULL,
+                            notificationItem(
+                                text = "Primate Pathways",
+                                icon = icon("globe"),
+                                href = "https://primatepathways.weebly.com/"),
+                            notificationItem(
+                                text = "Contact us",
+                                icon = icon("envelope"),
+                                href = "https://primatepathways.weebly.com/contact-us.html"))),
+
+        dashboardSidebar(width = 250,
+                         sidebarMenu(
+                             menuItem("Home",
+                                      tabName = "home",
+                                      icon = icon("home")
+                             ),
+
+                             menuItem("Study Region",
+                                      tabName = "map",
+                                      icon = icon("map-marker-alt")),
+
+                             menuItem("Corridor Network",
+                                      tabName = "charts",
+                                      icon = icon("map")),
+
+                             menuItem("Socioeconomic",
+                                      tabName = "socio",
+                                      icon = icon("user-friends")),
+
+                             menuItem("Climate Change",
+                                      tabName = "choropleth",
+                                      icon = icon("sun"))
+
+                         )), # end dashboardSidebar
+
+        dashboardBody(
+
+            tabItems(
+
+                tabItem(tabName = "home",
+                        includeMarkdown("www/delete.Rmd")
+                ),
+
+                tabItem(tabName = "map",
+                        h1(strong("Study Region")),
+                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        br(),
+                        fluidRow(
+                            column(4,box(width = 10, status = "success", solidHeader = TRUE, title="Area Type:",
+                                         checkboxGroupInput(inputId = "projectInput",
+                                                            label = NULL,
+                                                            choices = c("Commmunity Forest", "Reforestation Zone", "National Park", "Nature Reserve"),
+                                                            selected = c("Commmunity Forest", "Reforestation Zone", "National Park", "Nature Reserve")),
+                                         tableOutput("table3"))),
+                            column(8, leafletOutput("regionBase") %>% withSpinner(color = "green"))
+                        ),
+                        br(),
+                        dataTableOutput("regionTable") %>% withSpinner(color = "green")
+
+                ),
+
+                tabItem(tabName = "charts",
+                        h1(strong("Corridor Connectivity")),
+                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        br(),
+                        fluidRow(
+                            column(4, box(width = 10, status = "success", solidHeader = TRUE, title="Area Type:",
+                                          radioButtons(inputId = "projectInput",
+                                                       label = NULL,
+                                                       choices = c("Resistance Raster", "Connectivity Layer", "Barrier Map", "Least Cost Path"),
+                                                       selected = "Resistance Raster")),
+                                   tableOutput("table2")),
+                            column(8, leafletOutput("networkBase") %>% withSpinner(color = "green"))
+                        )
+
+                ),
+
+                tabItem(tabName = "socio",
+                        h1(strong("Community Opinions")),
+                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        br(),
+                        fluidRow(
+                            column(4,
+                                   box(width = 10, status = "success", solidHeader = TRUE, title="Choose Topic:",
+                                       checkboxGroupInput(inputId = "mean_pick",
+                                                          label = "Choose mean:",
+                                                          choices = c("Road Condition Status" = "mean_138",
+                                                                      "Agricultural Service Roads" = "mean_140",
+                                                                      "Road Infrastructure Good Status" = "mean_143",
+                                                                      "Road Infrastructure Bad Status" = "mean_144",
+                                                                      "Vehicles in the Community Forest" = "mean_146",
+                                                                      "Gender Violence" = "mean_192",
+                                                                      "Regulatory Instruments" = "mean_107",
+                                                                      "Community Involvement" = "mean_106",
+                                                                      "Pressure on the RNI" = "mean_153",
+                                                                      "Illegal Logging & Deforestation" = "mean_172"),
+                                                          selected = c("Road Condition Status" = "mean_138",
+                                                                       "Agricultural Service Roads" = "mean_140",
+                                                                       "Road Infrastructure Good Status" = "mean_143",
+                                                                       "Road Infrastructure Bad Status" = "mean_144",
+                                                                       "Vehicles in the Community Forest" = "mean_146",
+                                                                       "Gender Violence" = "mean_192",
+                                                                       "Regulatory Instruments" = "mean_107",
+                                                                       "Community Involvement" = "mean_106",
+                                                                       "Pressure on the RNI" = "mean_153",
+                                                                       "Illegal Logging & Deforestation" = "mean_172"))),
+                                   tableOutput("table4")),
+
+                            column(8, plotOutput(outputId = "heatmap_plot"))
+                        )),
+
+                tabItem(tabName = "choropleth",
+                        h1(strong("Climate Change Projections")),
+                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        br(),
+                        fluidRow(
+                            column(4,
+                                   box(width = 10, status = "success", solidHeader = TRUE, title="Area Type:",
+                                       selectInput(inputId = "projectInput",
+                                                   label = NULL,
+                                                   choices = c("Current Year", "Year 2050", "Year 2070"),
+                                                   selected = NULL)),
+                                   tableOutput("table1")),
+                            column(8,
+                                   leafletOutput("choroplethCategoriesPerState") %>% withSpinner(color = "green")
+                            )
+                        ))
+
+            )
+
+        ) # end dashboardBody
+
+    )# end dashboardPage
+
+))
 
 
-# ui
-ui <- fluidPage(theme = SR_theme,
+##########
+##########
+##########
 
-                navbarPage(title = div(id = "img-id",
-                                           img(src = "logo.png",
-                                               height = "100"),
-                                       "Strong Roots Congo Project Directory"),
+server <- shinyServer(function (input, output) {
 
-                           tabPanel("About",
-                                    headerPanel("Strong Roots Mission & Vision"),
-                                    h5("Strong Roots Congo empowers local communities by providing knowledge, tools and opportunities for a sustainable way of life while also supporting the long term preservation of endemic species.",
-                                       style = "margin: 5px 20px"),
-                                    br(),
-                                    splitLayout(cellWidths = c("50%", "50%"),
-                                                div(
-                                                    img(src = "gorilla1.jpg",
-                                                        width = "350",
-                                                        style = "vertical-align:middle;margin:5px 50px"),
-                                                    br(),
-                                                    br(),
-                                                    p("Strong Roots is working to create a corridor of community forests that connect the Kahuzi-Biega National Park and the Itombwe Nature Reserve. Once designated by the government as a community forest, the corridor would promote the long-term connectivity and protection of Grauer's gorilla populations in the region. The pilot project requires thecombinationof multiple smaller strategies ranging from community education to species mapping to climate modeling.",
-                                                      style = "margin: 20px 20px"),
-                                                    ),
-                                                div(h5("Vision:"),
-                                                    p("To see local communities, indigenous peoples, and wildlife thrive together in the Eastern Democratic Republic of the Congo."),
-                                                    br(),
-                                                    h5("Mission:"),
-                                                    p("To simultaneously conserve gorilla populations and support local communities through the empowerment and engagement of local indigenous peoples and communities in conservation practices."),
-                                                    br(),
-                                                    br(),
-                                                    img(src = "child.jpg",
-                                                        width = "350",
-                                                        style = "vertical-align:middle;margin:5px 50px"))
-                                    ),
-                                    br(),
-                                    br(),
-                                    h2("Contact Strong Roots"),
-                                    br(),
-                                    h4("Website"),
-                                    a("www.strongrootscongo.org",
-                                      href = "www.strongrootscongo.org"),
-                                    h4("Founder & Executive Director"),
-                                    p("Dominique Bikaba, bikaba@strongrootscongo.org"),
-                                    actionButton(inputId = "donate",
-                                                 label = "Donate to Stronng Roots",
-                                                 icon = NULL)
-                                    ),
+    # region map
+    output$regionBase <- renderLeaflet({
+        leaflet() %>%
+            setView(lng = 28.45861, lat = -3.05, zoom = 8.5) %>%
+            addProviderTiles(providers$Esri.WorldTopoMap)
+    })
 
 
-                           tabPanel("Projects",
-                                    sidebarLayout(
-                                        sidebarPanel("Projects",
-                                                     checkboxGroupInput(inputId = "pick_type",
-                                                                        label = "Choose project:",
-                                                                        choices = unique(corridor$type)),
-                                                     sliderInput(inputId = "pick_date",
-                                                                 label = "Date Range:",
-                                                                 min = as.Date("2009-01-01","%Y-%m-%d"),
-                                                                 max = as.Date("2021-01-01","%Y-%m-%d"),
-                                                                 value = as.Date(c("2009-01-01","2021-01-01"),"%Y"),
-                                                                 step = NULL,
-                                                                 round = FALSE,
-                                                                 timeFormat = "%Y",
-                                                                 locale = "us",
-                                                                 ticks = TRUE)
-                                        ),
-                                        mainPanel("Output",
-                                                  plotOutput("sr_plot"))
-                                    )
-                           ),
+    #REGION TABLE
+    table_select <- reactive({
+        study %>%
+            filter(mean %in% c(input$mean_pick))
+    })
 
-                           tabPanel("Project Impact",
-                                    sidebarLayout(
-                                        sidebarPanel("Projects",
-                                                     radioButtons(inputId = "pick_project",
-                                                                  label = "Choose project:",
-                                                                  choices = unique(projects_all$project),
-                                                                  selected = NULL),
-                                                     sliderInput(inputId = "pick_date",
-                                                                 label = "Date Range:",
-                                                                 min = as.Date("2009-01-01","%Y-%m-%d"),
-                                                                 max = as.Date("2021-01-01","%Y-%m-%d"),
-                                                                 value = as.Date(c("2009-01-01","2021-01-01"),"%Y"),
-                                                                 step = NULL,
-                                                                 round = FALSE,
-                                                                 timeFormat = "%Y",
-                                                                 locale = "us",
-                                                                 ticks = TRUE),
-                                        ),
-                                        mainPanel("Output",
-                                                  plotOutput("impact_plot"))
-                                    ))
+    # region table
+    output$regionTable <- renderDataTable({
 
-                )
-
-)
-
-server <- function(input, output) {
-
-    sr_reactive <- reactive({
-
-        corridor %>%
-            filter(type %in% input$pick_type)
+        study_region_table <- read_csv("study_region.csv") %>%
+            clean_names() %>%
+            select(area_ha:assisting_org)
 
     })
 
-    output$sr_plot <- renderPlot(
-        ggplot(data = sr_reactive(), aes(x = area_sq, y = area_ha)) +
-            geom_point(aes(color = type))
-    )
 
-    # For Project Impact tab
+    # network map
+    output$networkBase <- renderLeaflet({
+        leaflet() %>%
+            setView(lng = 28.45861, lat = -3.05, zoom = 8.5) %>%
+            addProviderTiles(providers$Esri.WorldTopoMap)
+    })
 
-    impact_reactive <- reactive({
+    ###
 
-        projects_all  %>%
-           # filter(date %in% input$pick_date) %>%
-            filter(project %in% input$pick_project)
+    mean_select <- reactive({
+        data_for_heat_long %>%
+            filter(mean %in% c(input$mean_pick))
+    })
+
+    output$heatmap_plot <- renderPlot({
+
+        ggplot(data = mean_select(), aes(x=mean_distance, y=mean, fill=score)) +
+            geom_tile(color="white", size= 0.25) +
+            labs(title = "Monica's Green Machine") +
+            scale_fill_distiller(palette = "Greens", direction=1) +
+            scale_y_discrete(expand = c(0,0)) +
+           scale_x_discrete("Distance (meters)", labels = c("1000", "", "", "", "","","", "", "", "","","", "", "", "","", "", "", "","", "", "", "", "26000")) +
+            coord_fixed() +
+            theme_grey(base_size=8) +
+            theme(
+                axis.text = element_text(face="bold"),
+                axis.ticks=element_line(size=0.4),
+                plot.background = element_blank(),
+                panel.border = element_blank())
 
     })
 
-    output$impact_plot <- renderPlot(
-        ggplot(data = impact_reactive(), aes(x = date, y = area_hct)) +
-            geom_point()
-    )
+})
 
-
-
-}
 
 shinyApp(ui = ui, server = server)
-
