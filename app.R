@@ -7,10 +7,9 @@ library(tigris)
 library(sf)
 library(tmap)
 library(janitor)
+library(here)
 
 ### WRANGLING
-
-#work baby
 
 study_region_table <- read_csv("study_region.csv") %>%
     clean_names() %>%
