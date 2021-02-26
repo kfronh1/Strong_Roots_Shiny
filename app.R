@@ -11,6 +11,8 @@ library(tidyverse)
 
 ### WRANGLING
 
+source("heatmap_creation.R")
+
 study_region_table <- read_csv("study_region.csv") %>%
     clean_names() %>%
     select(area_ha:assisting_org)
@@ -148,7 +150,6 @@ ui <- shinyUI(fluidPage(
                                                                        "Pressure on the RNI" = "mean_153",
                                                                        "Illegal Logging & Deforestation" = "mean_172"))),
                                    tableOutput("table4")),
-
                             column(8, plotOutput(outputId = "heatmap_plot"))
                         )),
 
@@ -228,9 +229,7 @@ server <- shinyServer(function (input, output) {
         data_for_heat_long %>%
             filter(mean %in% c(input$mean_pick))
     })
-
     output$heatmap_plot <- renderPlot({
-
         ggplot(data = mean_select(), aes(x=mean_distance, y=mean, fill=score)) +
             geom_tile(color="white", size= 0.25) +
             labs(title = "Monica's Green Machine") +
@@ -244,7 +243,6 @@ server <- shinyServer(function (input, output) {
                 axis.ticks=element_line(size=0.4),
                 plot.background = element_blank(),
                 panel.border = element_blank())
-
     })
 
 })
