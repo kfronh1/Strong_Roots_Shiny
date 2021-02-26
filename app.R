@@ -9,10 +9,13 @@ library(tmap)
 library(janitor)
 library(tidyverse)
 
+
 ### WRANGLING
 
+# Socio data
 source("heatmap_creation.R")
 
+# Study region
 study_region_table <- read_csv("study_region.csv") %>%
     clean_names() %>%
     select(area_ha:assisting_org)
