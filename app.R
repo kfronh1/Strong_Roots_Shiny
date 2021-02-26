@@ -8,9 +8,10 @@ library(sf)
 library(tmap)
 library(janitor)
 library(tidyverse)
+library(kableExtra)
 
 
-### WRANGLING
+### WRANGLING DATA
 
 # Socio data
 source("heatmap_creation.R")
