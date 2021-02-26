@@ -1,3 +1,4 @@
+library(tidyverse)
 library(leaflet)
 library(shiny)
 library(shinydashboard)
@@ -86,7 +87,7 @@ ui <- shinyUI(fluidPage(
 
                 tabItem(tabName = "map",
                         h1(strong("Study Region")),
-                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        p("The study region is located in the eastern Democratic Republic of Congo. On the map, once can locate Kahuzi-Beiga National Park and Itombwe Nature Reserve. The two largest remaining populations of Grauer's gorillas are located in those two protected areas. Thus, Strong Roots Congo is working with local communities to legally designate 7 community forests, which can also be displayed on the map. To improve connecvity of the landscape Strong Roots Congo has also designated reforestation zones along the borders of the entire community forest network, which can be displayed by choosing Reforestation Zone."),
                         br(),
                         fluidRow(
                             column(4,box(width = 10, status = "success", solidHeader = TRUE, title="Area Type:",
