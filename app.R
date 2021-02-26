@@ -71,7 +71,7 @@ ui <- shinyUI(fluidPage(
                                       icon = icon("user-friends")),
 
                              menuItem("Climate Change",
-                                      tabName = "choropleth",
+                                      tabName = "climate",
                                       icon = icon("sun"))
 
                          )), # end dashboardSidebar
@@ -152,7 +152,7 @@ ui <- shinyUI(fluidPage(
                             column(8, plotOutput(outputId = "heatmap_plot"))
                         )),
 
-                tabItem(tabName = "choropleth",
+                tabItem(tabName = "climate",
                         h1(strong("Climate Change Projections")),
                         p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
                         br(),
@@ -165,7 +165,7 @@ ui <- shinyUI(fluidPage(
                                                    selected = NULL)),
                                    tableOutput("table1")),
                             column(8,
-                                   leafletOutput("choroplethCategoriesPerState") %>% withSpinner(color = "green")
+                                   leafletOutput("climateBase") %>% withSpinner(color = "green")
                             )
                         ))
 
@@ -210,6 +210,13 @@ server <- shinyServer(function (input, output) {
 
     # network map
     output$networkBase <- renderLeaflet({
+        leaflet() %>%
+            setView(lng = 28.45861, lat = -3.05, zoom = 8.5) %>%
+            addProviderTiles(providers$Esri.WorldTopoMap)
+    })
+
+    # climate map
+    output$climateBase <- renderLeaflet({
         leaflet() %>%
             setView(lng = 28.45861, lat = -3.05, zoom = 8.5) %>%
             addProviderTiles(providers$Esri.WorldTopoMap)
