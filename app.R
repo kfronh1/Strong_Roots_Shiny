@@ -8,7 +8,6 @@ library(sf)
 library(tmap)
 library(janitor)
 library(tidyverse)
-library(kableExtra)
 
 
 ### WRANGLING DATA
