@@ -7,6 +7,7 @@ library(tigris)
 library(sf)
 library(tmap)
 library(janitor)
+library(tidyverse)
 
 ### WRANGLING
 
