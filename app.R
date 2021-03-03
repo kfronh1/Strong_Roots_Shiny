@@ -1,3 +1,4 @@
+library(tidyverse)
 library(leaflet)
 library(shiny)
 library(shinydashboard)
@@ -85,7 +86,7 @@ ui <- shinyUI(fluidPage(
 
                 tabItem(tabName = "map",
                         h1(strong("Study Region")),
-                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        p("The study region of the project is located in the eastern Democratic Republic of Congo. Strong Roots Congo is working with local communities to designate a ecological corridor connecting Kahuzi-Biega National Park and Itombwe Nature Reserve that is made up of a network of 7 community forests. Strong Roots is also designating an additional 5 sections as reforestation zones. The two protected areas, individual community forests, and reforestation zones can all be explored on the map below."),
                         br(),
                         fluidRow(
                             column(4,box(width = 10, status = "success", solidHeader = TRUE, title="Area Type:",
