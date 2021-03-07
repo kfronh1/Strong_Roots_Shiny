@@ -1,3 +1,4 @@
+library(raster)
 library(tidyverse)
 library(leaflet)
 library(shiny)
@@ -8,7 +9,7 @@ library(tigris)
 library(sf)
 library(tmap)
 library(janitor)
-library(tidyverse)
+library(here)
 
 
 ### WRANGLING DATA
@@ -21,6 +22,11 @@ study_region_table <- read_csv("study_region.csv") %>%
     clean_names() %>%
     select(area_ha:assisting_org)
 
+# Connectivity map layers
+barriers <- here('connectivity/barriers1.tif')
+pinch_points <- here('connectivity/pinchpoints.tif')
+lc_corridor <- here('connectivity/corridors.tif')
+resistance <- here('connectivity/resistance.tif')
 
 ### UI
 
@@ -92,7 +98,7 @@ ui <- shinyUI(fluidPage(
 
                 tabItem(tabName = "map",
                         h1(strong("Study Region")),
-                        p("The study region of the project is located in the eastern Democratic Republic of Congo. Strong Roots Congo is working with local communities to designate a ecological corridor connecting Kahuzi-Biega National Park and Itombwe Nature Reserve that is made up of a network of 7 community forests. Strong Roots is also designating an additional 5 sections as reforestation zones. The two protected areas, individual community forests, and reforestation zones can all be explored on the map below."),
+                        p("The study region is located in the eastern Democratic Republic of Congo in the Congo Basin rainforest within the Albertine Rift. Strong Roots Congo is working with local communities to designate an ecological corridor connecting Kahuzi-Biega National Park and Itombwe Nature Reserve that is made up of a network of 7 community forests. Strong Roots is also designating an additional 5 sections adjacent to the community forests as reforestation zones. The two protected areas, individual community forests, and reforestation zones can all be explored on the map below."),
                         br(),
                         fluidRow(
                             column(4,box(width = 10, status = "success", solidHeader = TRUE, title="Area Type:",
@@ -110,14 +116,14 @@ ui <- shinyUI(fluidPage(
 
                 tabItem(tabName = "charts",
                         h1(strong("Corridor Connectivity")),
-                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        p("To identify areas of the corridor that should be prioritized for conservation and restoration we modeled Grauer's gorillla connectivity between Kahuzi-Biega National Park and Itombwe Nature Reserve. To run the analysis we created a resistance layer to parameterize the cost of movement for Grauer's gorillas through each cell of the landscape, which can be seen on the map below. The analysis produces a least-cost path (LCP), least-cost corridor, pinchpoints, and barriers. The LCP is the least energetically costly route in terms of physical distance and resistance between the two protected areas and can be seen as the blue line on the map below. The least-cost corridor models the cost of movement across the entire landscape, with dark green indicating the least-costly areas of movement and red indicating the most-costly areas to move through on the map below. Pinch points are key locations where the flow of movement bottlenecks through a consitricted area, seen as red areas in the map below. Lastly, barriers represent areas in the landscape of a higher resistance that negatively impact movement, but if restored can improve overall connectivity. Barriers are idenified as the neon yellow circles, with the size of the circle corresponding to the physcial size of the barrier."),
                         br(),
                         fluidRow(
                             column(4, box(width = 10, status = "success", solidHeader = TRUE, title="Area Type:",
                                           radioButtons(inputId = "projectInput",
                                                        label = NULL,
-                                                       choices = c("Resistance Raster", "Connectivity Layer", "Barrier Map", "Least Cost Path"),
-                                                       selected = "Resistance Raster")),
+                                                       choices = c("Resistance Layer", "Least-Cost Corridor", "Least-Cost Path", "Pinch Points", "Barriers"),
+                                                       selected = "Resistance Layer")),
                                    tableOutput("table2")),
                             column(8, leafletOutput("networkBase") %>% withSpinner(color = "green"))
                         )
@@ -126,7 +132,7 @@ ui <- shinyUI(fluidPage(
 
                 tabItem(tabName = "socio",
                         h1(strong("Community Opinions")),
-                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        p("To determine the degree of local support for and primary community concerns about community forest management, we analyzed local communities' opinions about existing forest protections. The analysis focused on 3 sections: the natural resource section which examined sentiment on the importance of natural resources in community forest involvement, the governance section which gathered sentiment on interactions of communities with governing groups, and the knowledge of community forestry section which measured how communities grade their accessibility to resources. The results of the analysis can be explored in the heat map below."),
                         br(),
                         fluidRow(
                             column(4,
@@ -159,7 +165,7 @@ ui <- shinyUI(fluidPage(
 
                 tabItem(tabName = "climate",
                         h1(strong("Climate Change Projections")),
-                        p("Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again. Here there would be a description about what this project map shows. Now to show what this would look like as a paragrpah, we're going to just copy and paste these two sentences over and over again."),
+                        p("To identify areas that are likely to be resilient for Grauer's gorillas under future climate change we projected the future extent of suitable forest habitat under 2 climate change scenarios. The resulting maps of forest extent under RCP 4.5 and RCP 8.5 and resilient areas that remain suitable into the future can be explored on the map below for years 2050 and 2070."),
                         br(),
                         fluidRow(
                             column(4,
